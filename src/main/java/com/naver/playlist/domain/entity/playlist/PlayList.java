@@ -13,6 +13,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.naver.playlist.domain.constant.EntityConstants.MAX_PLAY_LIST_DESCRIPTION;
 import static com.naver.playlist.domain.constant.EntityConstants.MAX_PLAY_LIST_TITLE;
 
 @Entity
@@ -28,6 +29,9 @@ public class PlayList extends BaseEntity {
 
     @Column(nullable = false, length = MAX_PLAY_LIST_TITLE)
     private String title;
+
+    @Column(nullable = false, length = MAX_PLAY_LIST_DESCRIPTION)
+    private String description;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
