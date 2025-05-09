@@ -14,6 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter(AccessLevel.NONE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_playlist_music",
+                        columnNames = { "playListId", "musicId" }
+                )
+        }
+)
 public class PlayListItem extends BaseEntity {
 
     @Id @SnowflakeId
