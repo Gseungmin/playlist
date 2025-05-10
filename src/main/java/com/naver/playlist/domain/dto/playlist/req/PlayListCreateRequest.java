@@ -1,13 +1,11 @@
 package com.naver.playlist.domain.dto.playlist.req;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter(AccessLevel.NONE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class PlayListCreateRequest {
     private String title;
     private String description;

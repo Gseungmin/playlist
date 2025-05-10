@@ -3,9 +3,13 @@ package com.naver.playlist.web.controller;
 import com.naver.playlist.domain.dto.playlist.req.CreatePlayListItemRequest;
 import com.naver.playlist.domain.dto.playlist.req.DeletePlayListItemRequest;
 import com.naver.playlist.domain.dto.playlist.req.PlayListCreateRequest;
+import com.naver.playlist.domain.dto.redis.PlayListCreateDto;
+import com.naver.playlist.domain.service.PlayListService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static com.naver.playlist.domain.validator.MemberValidator.validateMemberId;
 import static com.naver.playlist.domain.validator.PlayListValidator.validatePlayListCreate;
@@ -14,6 +18,8 @@ import static com.naver.playlist.domain.validator.PlayListValidator.validatePlay
 @RequestMapping("/playlist")
 @RequiredArgsConstructor
 public class PlayListController {
+
+    private final PlayListService playListService;
 
     /*
      * 플레이리스트 생성
@@ -25,13 +31,13 @@ public class PlayListController {
      * 6. 만약 배치 삽입할 개수가 50개를 넘는다면 미리 벌크 인서트
      * */
     @PostMapping
-    public void create(
+    public PlayListCreateDto create(
             HttpServletRequest request,
             @RequestBody PlayListCreateRequest dto
     ) {
         validatePlayListCreate(dto);
         Long memberId = validateMemberId(request);
-        return;
+        return playListService.create(dto, memberId);
     }
 
     @PatchMapping("/{playlistId}")

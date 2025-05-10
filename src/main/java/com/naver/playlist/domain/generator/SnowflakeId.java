@@ -1,5 +1,5 @@
 
-package com.naver.playlist.generator;
+package com.naver.playlist.domain.generator;
 
 import java.lang.annotation.*;
 import org.hibernate.annotations.IdGeneratorType;
