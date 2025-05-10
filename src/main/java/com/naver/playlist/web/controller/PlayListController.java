@@ -1,4 +1,4 @@
-package com.naver.playlist.web.exception.controller;
+package com.naver.playlist.web.controller;
 
 import com.naver.playlist.domain.dto.playlist.req.CreatePlayListItemRequest;
 import com.naver.playlist.domain.dto.playlist.req.DeletePlayListItemRequest;
@@ -7,16 +7,30 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import static com.naver.playlist.domain.validator.MemberValidator.validateMemberId;
+import static com.naver.playlist.domain.validator.PlayListValidator.validatePlayListCreate;
+
 @RestController
 @RequestMapping("/playlist")
 @RequiredArgsConstructor
 public class PlayListController {
 
+    /*
+     * 플레이리스트 생성
+     * 1. DTO 유효성 검사
+     * 2. 사용자 인증 정보 조회
+     * 3. 플레이리스트 생성 정보를 인증정보와 함께 레디스에 임시 보관
+     * 4. 사용자에게 미리 응답
+     * 5. 500ms 주기에 맞춰서 배치 삽입
+     * 6. 만약 배치 삽입할 개수가 50개를 넘는다면 미리 벌크 인서트
+     * */
     @PostMapping
     public void create(
             HttpServletRequest request,
             @RequestBody PlayListCreateRequest dto
     ) {
+        validatePlayListCreate(dto);
+        Long memberId = validateMemberId(request);
         return;
     }
 

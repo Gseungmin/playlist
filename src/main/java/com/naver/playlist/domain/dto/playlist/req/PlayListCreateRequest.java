@@ -9,4 +9,6 @@ import lombok.Setter;
 @Setter(AccessLevel.NONE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlayListCreateRequest {
+    private String title;
+    private String description;
 }
