@@ -16,6 +16,7 @@ import java.util.*;
 
 import static com.naver.playlist.domain.constant.RedisConstants.DUPLICATION_TIME_OUT_DAY;
 import static com.naver.playlist.domain.constant.RedisConstants.PLAY_LIST_HASH_NAME;
+import static com.naver.playlist.domain.script.LUA_SCRIPT.EXTRACT_PLAY_LIST_LUA;
 import static com.naver.playlist.domain.script.LUA_SCRIPT.INSERT_PLAY_LIST_LUA;
 import static com.naver.playlist.web.exception.ExceptionType.*;
 
@@ -28,6 +29,9 @@ public class RedisHashService {
 
     private static final RedisScript<List> INSERT_PLAYLIST_SCRIPT =
             RedisScript.of(INSERT_PLAY_LIST_LUA, List.class);
+
+    private static final RedisScript<List> EXTRACT_PLAYLIST_SCRIPT =
+            RedisScript.of(EXTRACT_PLAY_LIST_LUA, List.class);
 
     /*
      * 플레이리스트 생성 정보를 Lua 스크립트로 원자적으로 삽입하고
@@ -96,6 +100,32 @@ public class RedisHashService {
         }
 
         return new PlayListCreateResponse(snapshotKey, snapshot);
+    }
+
+    /* 스케줄링 해시 초기화 및 스냅샷 생성 */
+    public PlayListCreateResponse extractPlayList(String hashKey) {
+        // 1️⃣ Lua 스크립트 실행
+        List<Object> result = executeExtractPlayListScript(hashKey);
+        validateLuaResult(result);
+
+        // 2️⃣ 스냅샷 생성 여부 확인
+        boolean snapshotCreated = String.valueOf(result.get(0)).equals("true");
+        if (!snapshotCreated) {
+            return null;
+        }
+
+        // 3️⃣ 스냅샷 파싱
+        return buildSnapshot(result);
+    }
+
+    private List<Object> executeExtractPlayListScript(String hashKey) {
+        @SuppressWarnings("unchecked")
+        List<Object> result = (List<Object>) redisTemplate.execute(
+                EXTRACT_PLAYLIST_SCRIPT,
+                Collections.singletonList(hashKey),
+                String.valueOf(Duration.ofDays(DUPLICATION_TIME_OUT_DAY).getSeconds())
+        );
+        return result;
     }
 
     /* 해시 조회 */

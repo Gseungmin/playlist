@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -93,5 +94,23 @@ public class PlayListTest extends ServiceTest {
         List<PlayList> 응답 = playListRepository.findAll();
         assertThat(해시.size()).isEqualTo(0);
         assertThat(응답.size()).isEqualTo(50);
+    }
+
+    @Test
+    @DisplayName("2. 플레이리스트 삽입 스케줄러 – 캐시된 플레이리스트는 1초가 지나기 전에 삽입되지 않는다")
+    void 플레이리스트는_1초_경과전에는_DB_미삽입() {
+        //given
+        Member 회원 = memberRepository.save(new Member("이름"));
+        flushAndClear();
+
+        //when
+        for (int i = 1; i <= 10; i++) {
+            PlayListCreateRequest 요청 = new PlayListCreateRequest("제목" + i, "설명" + i);
+            playListService.create(요청, 회원.getId());
+        }
+
+        //then
+        List<PlayList> 응답 = playListRepository.findAll();
+        assertThat(응답.size()).isEqualTo(0);
     }
 }

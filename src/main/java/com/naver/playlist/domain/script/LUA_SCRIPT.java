@@ -34,4 +34,31 @@ public class LUA_SCRIPT {
         local snapshotData = redis.call('HGETALL', snapshotKey)
         return { 'true', snapshotKey, snapshotData }
         """;
+
+    public static final String EXTRACT_PLAY_LIST_LUA = """
+        -- KEYS[1]  : 원본 해시 키
+        -- ARGV[1]  : 스냅샷 TTL(sec)
+
+        local hashKey   = KEYS[1]
+        local ttl       = tonumber(ARGV[1])
+
+        -- 1) 데이터가 없으면 빈 결과
+        if redis.call('HLEN', hashKey) == 0 then
+            return { 'false' }
+        end
+
+        -- 2) 스냅샷 키 생성 (타임스탬프 붙임)
+        local snapshotKey = hashKey .. ':' .. redis.call('TIME')[1]
+
+        -- 3) 해시 복사 → TTL 설정
+        redis.call('COPY',   hashKey, snapshotKey)
+        redis.call('EXPIRE', snapshotKey, ttl)
+
+        -- 4) 원본 해시 제거
+        redis.call('DEL', hashKey)
+
+        -- 5) 스냅샷 데이터 반환
+        local snapshotData = redis.call('HGETALL', snapshotKey)
+        return { 'true', snapshotKey, snapshotData }
+        """;
 }
