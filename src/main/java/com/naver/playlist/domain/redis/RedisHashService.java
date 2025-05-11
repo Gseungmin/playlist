@@ -2,6 +2,7 @@ package com.naver.playlist.domain.redis;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.naver.playlist.domain.dto.playlist.res.PlayListCreateResponse;
 import com.naver.playlist.domain.dto.redis.PlayListCreateDto;
 import com.naver.playlist.web.exception.CommonException;
 import com.naver.playlist.web.exception.infra.InfraException;
@@ -32,7 +33,7 @@ public class RedisHashService {
      * 플레이리스트 생성 정보를 Lua 스크립트로 원자적으로 삽입하고
      * 50개 단위 스냅샷이 만들어졌을 때만 전체 스냅샷을 반환한다.
      */
-    public List<PlayListCreateDto> insertPlayList(PlayListCreateDto dto) {
+    public PlayListCreateResponse insertPlayList(PlayListCreateDto dto) {
         // 1️⃣ 필드 키·값 준비
         String fieldKey = dto.getMemberId() + ":" + dto.getTitle();
         String fieldVal = convertToString(dto);
@@ -44,7 +45,7 @@ public class RedisHashService {
         // 3️⃣ 스냅샷 여부 체크
         boolean snapshotCreated = String.valueOf(result.get(0)).equals("true");
         if (!snapshotCreated) {
-            return new ArrayList<>();
+            return null;
         }
 
         // 4️⃣ 스냅샷 데이터 파싱
@@ -74,8 +75,8 @@ public class RedisHashService {
         }
     }
 
-    /* Lua 결과로부터 스냅샷(Map<fieldKey, PlayListCreateDto>) 생성 */
-    private List<PlayListCreateDto> buildSnapshot(List<Object> result) {
+    /* Lua 결과로부터 스냅샷 생성 */
+    private PlayListCreateResponse buildSnapshot(List<Object> result) {
         if (result.size() < 3) {
             throw new InfraException(
                     LUA_SCRIPT_RETURN_INVALID.getCode(),
@@ -93,7 +94,29 @@ public class RedisHashService {
             String value = dataList.get(i + 1);
             snapshot.add(convertToJson(value));
         }
-        return snapshot;
+
+        return new PlayListCreateResponse(snapshotKey, snapshot);
+    }
+
+    /* 해시 조회 */
+    public Map<String, PlayListCreateDto> findAllPlayList(String hashKey) {
+        Map<Object, Object> result = redisTemplate.opsForHash().entries(hashKey);
+
+        if (result == null || result.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, PlayListCreateDto> response = new HashMap<>(result.size());
+        result.forEach((key, value) -> response.put(
+                (String) key,
+                convertToJson((String) value)
+        ));
+        return response;
+    }
+
+    /* 해시(스냅샷) 삭제 */
+    public void deleteSnapshot(String snapshotKey) {
+        redisTemplate.delete(snapshotKey);
     }
 
     private String convertToString(PlayListCreateDto dto) {

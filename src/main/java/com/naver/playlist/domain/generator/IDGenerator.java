@@ -35,7 +35,7 @@ public class IDGenerator implements IdentifierGenerator {
         return timestamp;
     }
 
-    public long generateId() {
+    public synchronized long generateId() {
         long timestamp = currentTimeMillis();
         if (timestamp < lastTimestamp) {
             throw new CommonException(
