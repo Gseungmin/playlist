@@ -1,14 +1,16 @@
-package com.naver.playlist.generator;
+package com.naver.playlist.domain.generator;
 
 import com.naver.playlist.web.exception.CommonException;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
 import static com.naver.playlist.web.exception.ExceptionType.SYSTEM_TIME_EXCEPTION;
 
+@Component
 public class IDGenerator implements IdentifierGenerator {
 
     private static final long EPOCH           = 1700000000000L;
@@ -33,7 +35,7 @@ public class IDGenerator implements IdentifierGenerator {
         return timestamp;
     }
 
-    public long generateId() {
+    public synchronized long generateId() {
         long timestamp = currentTimeMillis();
         if (timestamp < lastTimestamp) {
             throw new CommonException(

@@ -3,7 +3,7 @@ package com.naver.playlist.domain.entity.music;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naver.playlist.domain.entity.base.BaseEntity;
 import com.naver.playlist.domain.entity.playlist.PlayListItem;
-import com.naver.playlist.generator.SnowflakeId;
+import com.naver.playlist.domain.generator.SnowflakeId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
