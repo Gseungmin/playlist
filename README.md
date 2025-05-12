@@ -10,9 +10,20 @@
 4. 플레이리스트에 중복된 노래를 추가할 수 없으며, 노래는 최대 1000개까지 추가할 수 있다.
 
 ## 서비스 구현
-### 대규모 플레이리스트 생성 [PR](https://github.com/Gseungmin/playlist/pull/3)
+### 대규모 플레이리스트 생성
+
+[문서화](https://jseungmin.notion.site/1f1e2fd91ae2808c8ba9d61abe8a7b27?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/3)
 
 1. 플레이리스트 생성시 레디스 캐시와 배치 인서트를 활용한다.
 2. 요청이 들어오면 먼저 캐시에 저장후, 사용자에게 응답한다.
 3. 이후 1000ms애 한번 배치 처리를 통한 벌크 인서트를 진행한다.
 4. 단, 대규모 트래픽시 1000ms라 하더라도 메모리 문제로 이어질 수 있으므로 특정 카운트에 도달하면 미리 벌크 인서트를 진행한다.
+
+### 플레이리스트 순서 정보 관리
+
+[문서화](https://jseungmin.notion.site/1f1e2fd91ae2808c8ba9d61abe8a7b27?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/4)
+
+1. 플레이리스트 순서 정보 관리를 위해 Gap-based numbering 방식 도입
+2. 인덱스 업데이트 비효율을 줄이기 위해 배치 업데이트 진행 (추후 인덱스 제거 검토)
+3. 리오더링 시 메모리 비효율을 최소화하기 위해 DTO 프로젝션 도입
+
