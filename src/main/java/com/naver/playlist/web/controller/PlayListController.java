@@ -102,6 +102,9 @@ public class PlayListController {
      *     - playListItem과 playList가 올바르게 매핑되어 있는지 확인
      *     - playList와 회원이 올바르게 매핑되어 있는지 확인
      * 4. 데이터 배치 처리
+     * 5. 만약 장애 발생시 리오더링을 진행 후 클라이언트에 알림
+     * 6. 리오더링 과정에서 DTO 프로젝션을 통해서 성능 최적화
+     * 7. 클라이언트는 재시도 요청 보냄
      * */
     @PatchMapping("/{playlistId}/items/order")
     public void reorderItems(
