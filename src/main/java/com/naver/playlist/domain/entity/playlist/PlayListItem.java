@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
@@ -19,7 +20,17 @@ import lombok.Setter;
                 @UniqueConstraint(
                         name = "uk_playlist_music",
                         columnNames = { "playListId", "musicId" }
+                ),
+                @UniqueConstraint(
+                        name = "uk_playlist_position",
+                        columnNames = { "playListId", "position" }
                 )
+        },
+        indexes = {
+            @Index(
+                    name = "idx_playlist_position",
+                    columnList = "playListId, position"
+            )
         }
 )
 public class PlayListItem extends BaseEntity {
@@ -28,6 +39,10 @@ public class PlayListItem extends BaseEntity {
     @GeneratedValue
     @Column(name = "playListItemId")
     private Long id;
+
+    @Column(nullable = false)
+    @Comment("정렬용 숫자 값으로 같은 플레이리스트 내에서 유일해야 한다")
+    private Long position;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

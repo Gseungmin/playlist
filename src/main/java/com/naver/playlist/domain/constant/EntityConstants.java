@@ -9,4 +9,5 @@ public class EntityConstants {
     /*PLAY LIST*/
     public static final int MAX_PLAY_LIST_TITLE = 40;
     public static final int MAX_PLAY_LIST_DESCRIPTION = 200;
+    public static final long GAP = 9214157878975800L;
 }

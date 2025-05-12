@@ -18,6 +18,13 @@ public enum ExceptionType {
     /* MEMBER Exception */
     MEMBER_AUTH_ID_INVALID( 10000, "회원 인증정보가 적절하지 않습니다."),
 
+    /* PLAYLIST Exception */
+    PLAY_LIST_NOT_EXIST( 20000, "플레이리스트가 존재하지 않습니다."),
+    PLAY_LIST_AUTH_INVALID( 20001, "플레이리스트 접근 권한이 없습니다."),
+    PLAY_LIST_ITEM_NOT_EXIST( 20002, "플레이리스트 노래가 존재하지 않습니다."),
+    PLAY_LIST_NOT_MATCH_ITEM( 20003, "같은 플레이리스트의 노래만 업데이트 해주세요."),
+
+
     /* DTO Exception */
     PLAY_LIST_TITLE_INVALID( 80000, "플레이리스트 제목을 40자 이내로 작성해주세요."),
     PLAY_LIST_DESCRIPTION_INVALID( 80000, "플레이리스트 내용은 1000자 이내로 작성해주세요.");
