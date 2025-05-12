@@ -6,7 +6,6 @@ import com.naver.playlist.domain.entity.member.Member;
 import com.naver.playlist.domain.entity.playlist.PlayList;
 import com.naver.playlist.domain.redis.RedisHashService;
 import com.naver.playlist.domain.repository.MemberRepository;
-import com.naver.playlist.domain.repository.PlayListRepository;
 import com.naver.playlist.domain.service.PlayListService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
