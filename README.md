@@ -13,7 +13,7 @@
 
 ### 플레이리스트 순서 정보 관리
 
-[문서화](https://jseungmin.notion.site/1f1e2fd91ae2808c8ba9d61abe8a7b27?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/4)
+[문서화](https://jseungmin.notion.site/Gap-based-numbering-1f1e2fd91ae28026be54f19c9c00b704?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/4)
 
 1. 플레이리스트 순서 정보 관리를 위해 Gap-based numbering 방식 도입
 2. 인덱스 업데이트 비효율을 줄이기 위해 배치 업데이트 진행 (추후 인덱스 제거 검토)
