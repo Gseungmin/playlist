@@ -53,4 +53,10 @@ public class PlayListItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicId")
     private Music music;
+
+    public PlayListItem(Long position, PlayList playList, Music music) {
+        this.position = position;
+        this.playList = playList;
+        this.music = music;
+    }
 }

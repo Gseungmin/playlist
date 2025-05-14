@@ -23,6 +23,9 @@ public enum ExceptionType {
     PLAY_LIST_AUTH_INVALID( 20001, "플레이리스트 접근 권한이 없습니다."),
     PLAY_LIST_ITEM_NOT_EXIST( 20002, "플레이리스트 노래가 존재하지 않습니다."),
     PLAY_LIST_NOT_MATCH_ITEM( 20003, "같은 플레이리스트의 노래만 업데이트 해주세요."),
+    PLAY_LIST_EXCEED_LIMIT( 20004, "플레이리스트는 최대 1000개까지 생성할 수 있습니다."),
+
+    MUSIC_NOT_EXIST( 21000, "음악이 존재하지 않습니다."),
 
 
     /* DTO Exception */
