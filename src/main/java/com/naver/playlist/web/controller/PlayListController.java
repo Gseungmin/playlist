@@ -101,7 +101,7 @@ public class PlayListController {
             HttpServletRequest request,
             @PathVariable Long playlistId,
             @RequestBody CreatePlayListItemRequest dto
-    ) {
+    ) throws InterruptedException {
         Long memberId = validateMemberId(request);
 
         Music music = musicService.getMusic(

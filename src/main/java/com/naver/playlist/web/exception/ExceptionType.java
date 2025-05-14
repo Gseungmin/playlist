@@ -14,6 +14,7 @@ public enum ExceptionType {
 
     /* INFRA Exception */
     LUA_SCRIPT_RETURN_INVALID( 91000, "루아 스크립트 반환 정보가 잘못되었습니다."),
+    REDIS_LOCK_INTERRUPT( 91001, "인터럽트가 발생했습니다."),
 
     /* MEMBER Exception */
     MEMBER_AUTH_ID_INVALID( 10000, "회원 인증정보가 적절하지 않습니다."),
@@ -24,6 +25,7 @@ public enum ExceptionType {
     PLAY_LIST_ITEM_NOT_EXIST( 20002, "플레이리스트 노래가 존재하지 않습니다."),
     PLAY_LIST_NOT_MATCH_ITEM( 20003, "같은 플레이리스트의 노래만 업데이트 해주세요."),
     PLAY_LIST_EXCEED_LIMIT( 20004, "플레이리스트는 최대 1000개까지 생성할 수 있습니다."),
+    PLAY_LIST_NOT_CONCURRENCY( 20005, "플레이리스트는 동시에 수정할 수 없어요."),
 
     MUSIC_NOT_EXIST( 21000, "음악이 존재하지 않습니다."),
 
