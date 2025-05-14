@@ -17,8 +17,12 @@ public interface PlayListItemRepository extends JpaRepository<PlayListItem, Long
             "where pli.id in :ids")
     List<PlayListItem> findPlayListItemForUpdate(List<Long> ids);
 
-    @Query("select pli.id as playListItemId, pli.position as position from PlayListItem pli " +
-            "where pli.playList.id = :playListId " +
-            "order by pli.position")
+    @Query("""
+           select pli.id       as playListItemId,
+                  pli.position as position
+           from   PlayListItem pli
+           where  pli.playList.id = :playListId
+           order  by pli.position
+    """)
     List<PlayListItemProjection> findPlayListItemAll(Long playListId);
 }
