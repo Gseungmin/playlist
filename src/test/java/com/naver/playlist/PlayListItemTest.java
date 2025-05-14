@@ -3,12 +3,10 @@ package com.naver.playlist;
 import com.naver.playlist.domain.entity.member.Member;
 import com.naver.playlist.domain.entity.music.Music;
 import com.naver.playlist.domain.entity.playlist.PlayList;
-import com.naver.playlist.domain.redis.RedisHashService;
 import com.naver.playlist.domain.repository.MemberRepository;
 import com.naver.playlist.domain.repository.MusicRepository;
 import com.naver.playlist.domain.repository.PlayListRepository;
 import com.naver.playlist.domain.service.PlayListItemService;
-import com.naver.playlist.domain.service.PlayListService;
 import com.naver.playlist.web.exception.entity.PlayListException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,14 +14,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-import static com.naver.playlist.web.exception.ExceptionType.PLAY_LIST_EXCEED_LIMIT;
-import static com.naver.playlist.web.exception.ExceptionType.PLAY_LIST_NOT_EXIST;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.naver.playlist.web.exception.ExceptionType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -85,7 +88,7 @@ public class PlayListItemTest extends ServiceTest {
 
     @Test
     @DisplayName("1. 플레이리스트에 노래 삽입 - 엣지 케이스 - 플레이리스트에는 최대 1000개까지 노래를 삽입할 수 있다.")
-    void 플레이리스트에는_최대_1000개까지_노래를_만들수없다() {
+    void 플레이리스트에는_최대_1000개까지_노래를_만들수없다() throws InterruptedException {
         //given
         for (int i = 0; i < 1000; i++) {
             Music 음악 = 음악리스트.get(i);
@@ -102,5 +105,54 @@ public class PlayListItemTest extends ServiceTest {
 
         assertEquals(PLAY_LIST_EXCEED_LIMIT.getCode(), 예외.getCode());
         assertEquals(PLAY_LIST_EXCEED_LIMIT.getErrorMessage(), 예외.getErrorMessage());
+    }
+
+    @Test
+    @DisplayName("2. 플레이리스트에 노래 동시 삽입 - 분산락을 통해 동시성 문제를 제어한다.")
+    @Sql(
+            value = "/sql/cleanup_test_data.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
+    void 분산락으로_플레이리스트_동시성_문제를_해결한다() throws InterruptedException {
+        //given
+        Music 음악1 = 음악리스트.get(0);
+        Music 음악2 = 음악리스트.get(1);
+
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
+
+        //when
+        TestTransaction.start();
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+        CountDownLatch ready = new CountDownLatch(2);
+        CountDownLatch go    = new CountDownLatch(1);
+
+        List<Throwable> thrown = Collections.synchronizedList(new ArrayList<>());
+
+        Runnable 스레드1 = () -> {
+            ready.countDown();
+            try { go.await(); playListItemService.create(플레이리스트.getId(), 회원1.getId(), 음악1); }
+            catch (Throwable e) { thrown.add(e); }
+        };
+        Runnable 스레드2 = () -> {
+            ready.countDown();
+            try { go.await(); playListItemService.create(플레이리스트.getId(), 회원1.getId(), 음악2); }
+            catch (Throwable e) { thrown.add(e); }
+        };
+
+        pool.execute(스레드1);
+        pool.execute(스레드2);
+        ready.await();
+        go.countDown();
+        pool.shutdown();
+        pool.awaitTermination(5, TimeUnit.SECONDS);
+
+        flushAndClear();
+
+        //then
+        assertEquals(thrown.size(), 1);
+        PlayListException error = (PlayListException) thrown.get(0);
+        assertEquals(PLAY_LIST_NOT_CONCURRENCY.getCode(), error.getCode());
+        assertEquals(PLAY_LIST_NOT_CONCURRENCY.getErrorMessage(), error.getErrorMessage());
     }
 }
