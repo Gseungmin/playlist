@@ -41,4 +41,11 @@ public class PlayList extends BaseEntity {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "playList")
     private List<PlayListItem> playListItemList = new ArrayList<>();
+
+    public PlayList(String title, String description, Member member) {
+        this.title = title;
+        this.description = description;
+        this.member = member;
+        member.getPlayListList().add(this);
+    }
 }
