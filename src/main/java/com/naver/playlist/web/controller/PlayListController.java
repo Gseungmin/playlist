@@ -68,6 +68,21 @@ public class PlayListController {
         return;
     }
 
+    /*
+     * 플레이리스트 노래 조회 API
+     *
+     * 요구사항:
+     * - 플레이리스트에는 대규모 트래픽의 조회가 발생한다.
+     * - 플레이리스트에 변경 자체는 많지 않지만, 메모리 문제로 인해 오랜시간 캐시를 사용할 수 없다.
+     *
+     * 프로세스:
+     * 1. 플레이리스트 조회
+     *    - 캐시 조회, 만약 특정 참조 수를 넘어서면 TTL 초기화
+     *    - 커서기반 페이지네이션으로 조회
+     * 2. 캐시 업데이트
+     *    - 캐시에 존재하지 않을 때 캐시에 저장
+     *    - 캐시 스템피드 방지를 위해 한개의 스레드만 DB 접근
+     */
     @GetMapping("/{playlistId}/items")
     public void getItemList(
             HttpServletRequest request,
