@@ -4,6 +4,7 @@ import com.naver.playlist.domain.dto.playlist.req.CreatePlayListItemRequest;
 import com.naver.playlist.domain.dto.playlist.req.DeletePlayListItemRequest;
 import com.naver.playlist.domain.dto.playlist.req.PlayListCreateRequest;
 import com.naver.playlist.domain.dto.playlist.req.ReorderPlayListItemsRequest;
+import com.naver.playlist.domain.dto.playlist.res.PlayListResponse;
 import com.naver.playlist.domain.dto.redis.PlayListCreateDto;
 import com.naver.playlist.domain.entity.music.Music;
 import com.naver.playlist.domain.service.MusicService;
@@ -84,12 +85,11 @@ public class PlayListController {
      *    - 캐시 스템피드 방지를 위해 한개의 스레드만 DB 접근
      */
     @GetMapping("/{playlistId}/items")
-    public void getItemList(
-            HttpServletRequest request,
+    public PlayListResponse getItemList(
             @PathVariable Long playlistId,
             @RequestParam(required = false) Long cursor
-    ) {
-        return;
+    ) throws InterruptedException {
+        return playListService.get(playlistId, cursor);
     }
 
     /*
