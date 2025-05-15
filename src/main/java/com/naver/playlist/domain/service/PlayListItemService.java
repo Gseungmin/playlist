@@ -11,7 +11,6 @@ import com.naver.playlist.domain.repository.JdbcBulkRepository;
 import com.naver.playlist.domain.repository.PlayListItemRepository;
 import com.naver.playlist.domain.repository.PlayListRepository;
 import com.naver.playlist.web.exception.entity.PlayListException;
-import com.naver.playlist.web.exception.infra.InfraException;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
