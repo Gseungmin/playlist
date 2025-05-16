@@ -11,7 +11,7 @@
 
 ## 서비스 구현
 
-### 플레이리스트 순서 정보 관리
+### 1️⃣ 플레이리스트 순서 정보 관리
 
 [문서화](https://jseungmin.notion.site/Gap-based-numbering-1f1e2fd91ae28026be54f19c9c00b704?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/4)
 
@@ -19,14 +19,22 @@
 2. 인덱스 업데이트 비효율을 줄이기 위해 배치 업데이트 진행 (추후 인덱스 제거 검토)
 3. 리오더링 시 메모리 비효율을 최소화하기 위해 DTO 프로젝션 도입
 
-### 분산락을 통한 동시성 제어 및 쿼리 튜닝을 통한 성능 개선
+### 2️⃣ 인기 플레이리스트 캐시 관리
+
+[문서화](https://jseungmin.notion.site/1f4e2fd91ae28009b34cc633b6e45a44?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/6)
+
+1. 대규모 트리팩에서는 캐시 관리가 필수적이다.
+2. 하지만 모든 플레이리스트를 캐시 관리하기엔 비효율적인다.
+3. 따라서 LFU를 통해 인기 게시글과 비인기 게시글을 관리한다.
+
+### 3️⃣ 분산락을 통한 동시성 제어 및 쿼리 튜닝을 통한 성능 개선
 
 [분산락 문서화](https://jseungmin.notion.site/1f3e2fd91ae28011bc48ccea953c5223?pvs=4) [쿼리 성능 테스트 문서화](https://jseungmin.notion.site/3-1-1f3e2fd91ae280508cbcf974c44d8dd0?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/5)
 
 1. DB 트리거 방식의 단점을 보완하기 위해 분산락을 도입하여 동시성 제어
 2. 3개의 쿼리를 1개로 줄임으로 요청 처리량 32.43% 개선
 
-### 대규모 플레이리스트 생성
+### 4️⃣ 대규모 플레이리스트 생성
 
 [문서화](https://jseungmin.notion.site/1f1e2fd91ae2808c8ba9d61abe8a7b27?pvs=4) [PR](https://github.com/Gseungmin/playlist/pull/3)
 
