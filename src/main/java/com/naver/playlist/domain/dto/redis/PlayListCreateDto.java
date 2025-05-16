@@ -19,8 +19,8 @@ public class PlayListCreateDto {
     public PlayListCreateDto(
             PlayListCreateRequest dto,
             Long playlistId,
-            Long memberId)
-    {
+            Long memberId
+    ) {
         this.playlistId = playlistId;
         this.memberId = memberId;
         this.title = dto.getTitle();

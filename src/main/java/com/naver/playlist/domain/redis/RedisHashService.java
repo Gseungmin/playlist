@@ -14,10 +14,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.*;
 
-import static com.naver.playlist.domain.constant.RedisConstants.DUPLICATION_TIME_OUT_DAY;
-import static com.naver.playlist.domain.constant.RedisConstants.PLAY_LIST_HASH_NAME;
-import static com.naver.playlist.domain.script.LUA_SCRIPT.EXTRACT_PLAY_LIST_LUA;
-import static com.naver.playlist.domain.script.LUA_SCRIPT.INSERT_PLAY_LIST_LUA;
+import static com.naver.playlist.domain.constant.RedisConstants.*;
+import static com.naver.playlist.domain.script.LUA_SCRIPT.*;
 import static com.naver.playlist.web.exception.ExceptionType.*;
 
 @Service
