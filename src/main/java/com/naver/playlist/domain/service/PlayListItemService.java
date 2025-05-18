@@ -1,6 +1,6 @@
 package com.naver.playlist.domain.service;
 
-import com.naver.playlist.domain.dto.playlist.req.PlayListItemProjection;
+import com.naver.playlist.domain.dto.projection.PlayListItemProjection;
 import com.naver.playlist.domain.dto.playlist.req.ReorderPlayListItemsRequest;
 import com.naver.playlist.domain.dto.playlist.res.PlayListReOrderResponse;
 import com.naver.playlist.domain.dto.projection.PlayListStatProjection;
