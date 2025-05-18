@@ -1,4 +1,4 @@
-package com.naver.playlist;
+package com.naver.playlist.mock;
 
 import com.naver.playlist.domain.dto.playlist.res.PlayListCreateResponse;
 import com.naver.playlist.domain.dto.redis.PlayListCreateDto;
@@ -20,8 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PlayListAsyncServiceTest {
-
+public class PlayListAsyncMockServiceTest {
 
     @Mock JdbcBulkRepository bulkRepository;
     @Mock RedisHashService redisHashService;

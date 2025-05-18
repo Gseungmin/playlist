@@ -16,6 +16,8 @@ public enum ExceptionType {
     LUA_SCRIPT_RETURN_INVALID( 91000, "루아 스크립트 반환 정보가 잘못되었습니다."),
     REDIS_LOCK_INTERRUPT( 91001, "인터럽트가 발생했습니다."),
 
+    DATABASE_ACCESS_EXCEPTION( 92000, "데이터베이스에 접근할 수 없습니다."),
+
     /* MEMBER Exception */
     MEMBER_AUTH_ID_INVALID( 10000, "회원 인증정보가 적절하지 않습니다."),
 
