@@ -1,6 +1,6 @@
 package com.naver.playlist.domain.repository;
 
-import com.naver.playlist.domain.dto.playlist.req.PlayListItemProjection;
+import com.naver.playlist.domain.dto.projection.PlayListItemProjection;
 import com.naver.playlist.domain.entity.playlist.PlayListItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
