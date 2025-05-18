@@ -20,6 +20,7 @@ public class JdbcBulkRepository {
           (play_list_id, member_id, title, description, created_date, last_modified_date)
         VALUES
           (:id, :memberId, :title, :description, :createdDate, :lastModifiedDate)
+        ON DUPLICATE KEY UPDATE play_list_id = play_list_id
     """;
 
     private static final String UPDATE_SQL = """
