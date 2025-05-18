@@ -4,6 +4,7 @@ import com.naver.playlist.domain.dto.playlist.res.PlayListCreateResponse;
 import com.naver.playlist.domain.dto.redis.PlayListCreateDto;
 import com.naver.playlist.domain.redis.RedisHashService;
 import com.naver.playlist.domain.repository.JdbcBulkRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.scheduling.annotation.Async;
@@ -25,6 +26,8 @@ public class PlayListAsyncService {
 
     private final JdbcBulkRepository bulkRepository;
     private final RedisHashService redisHashService;
+
+    @Getter
     private final Map<String, List<PlayListCreateDto>> fallbackCache = new ConcurrentHashMap<>();
 
     @Async
