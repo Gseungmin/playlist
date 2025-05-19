@@ -25,12 +25,6 @@ import org.hibernate.annotations.Comment;
                         name = "uk_playlist_position",
                         columnNames = { "playListId", "position" }
                 )
-        },
-        indexes = {
-            @Index(
-                    name = "idx_playlist_position",
-                    columnList = "playListId, position"
-            )
         }
 )
 public class PlayListItem extends BaseEntity {
